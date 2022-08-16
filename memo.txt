@@ -1,0 +1,43 @@
+〇新規アプリ作成の手順(ruby:3.0.1 rails:6.1.3.2で試した)
+手順１．新規アプリ作成
+　　Rails _[バージョン指定]_ new [アプリ名] -d [DB指定]
+　　　Ex）rails _5.2.4.6_ new firstRails -d mysql
+      ※オプションを一切つけず、rails new [アプリ名]で新規アプリ作成するとrails s がすぐできる！
+　　※必要に応じてwebpackerのインストール　※rails sをするために必要！
+　　　rails webpacker:install
+手順２．model作成
+　　rails generate model [モデル名] [カラム⓵:データ型⓵ カラム⓶:データ型⓶]
+　　 Ex)rails generate model User name:string mail:string password:string
+手順３．DBの作成　MySQLのコマンドでDBを作成する：create database [db名]
+　　　　config/database.ymlでDB名&ユーザー名修正　※MySQLのユーザー：wsluser,バス：null
+手順４．マイグレーション実行
+　　　　rake db:migrate
+手順５．コントローラの作成
+　　　　rails generate controller [コントローラ名]
+　　　　Ex）rails generate controller Users
+　　　　※コントローラは基本的にmodelと１対１で対応するように作成する
+　　　　※コントローラ名はmodel名を複数形にした名前をつける。
+以降の流れ
+　⓵コントローラに処理を書く         app/controllers/～.rb
+　⓶routes.rbにルーティングを書く    config/routes.rb         get "URL" => "コントローラ名#アクション名"
+　⓷viwsページを作成する             app/views/～/～.rb
+　必要に応じてmodelにバリデーション等書く！
+
+〇静的ファイルの作成　⇒コントローラのみ作成する！（モデルを作らない）
+ rails generate controller [コントローラ名] [アクション名]
+　Ex)rails generate controller StaticPages home
+
+〇マイグレーションファイルの作成&マイグレーション実行
+　手順１．作成：rails g migration [マイグレーションファイル名]
+　　　　　　Ex)rails g migration add_password_digist_to_users
+　手順２．ファイル編集　db/migrate/～.rbを編集する
+　手順３．実行：rake db:migrate  　※アプリのルートディレクトリで実行する必要有り！（Rakefileのある階層）
+
+〇ログインパスワードの暗号化
+　手順１．モデル（マイグレーションファイル）に追加するカラム名はpassword_digestとする
+  手順２．has_secure_passwordをモデルファイルに記述する
+  手順３．bcryptというgemをインストールする
+  手順４．protect_from_forgeryをコントローラーに記述する
+
+〇環境変数ファイルの作成＆呼び出し
+　
