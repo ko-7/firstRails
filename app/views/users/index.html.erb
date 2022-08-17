@@ -1,0 +1,27 @@
+<h1>ユーザ一覧</h1>
+<h2>/users</h2>
+
+<table class="table">
+  <thead>
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">名前</th>
+      <th scope="col">メールアドレス</th>
+      <th scope="col">パスワード</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% @users.each do |user| %>
+      <tr>
+        <th><%= user.id %></th>
+        <td><%= user.name %></td>
+        <td><%= user.mail %></td>
+        <td><%= user.password_digest %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+
+

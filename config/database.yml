@@ -15,13 +15,13 @@ default: &default
   pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
   # username: root
   # password:
-  username: wsluser
+  username: <%= ENV['DB_USER'] %>
   password: 
   host: localhost
 
 development:
   <<: *default
-  database: firstRails_development
+  database: ruby_firstRails
 
 # Warning: The database defined as "test" will be erased and
 # re-generated from your development database when you run "rake".
