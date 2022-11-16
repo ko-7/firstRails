@@ -1,3 +1,5 @@
+※※　このファイルのメモは「新規アプリ作成直後」に必要な知識についてです。　※※
+
 〇新規アプリ作成の手順(ruby:3.0.1 rails:6.1.3.2で試した)
 　手順１．新規アプリ作成
 　　Rails _[バージョン指定]_ new [アプリ名] -d [DB指定]
@@ -9,6 +11,7 @@
 　　　rails generate model [モデル名] [カラム⓵:データ型⓵ カラム⓶:データ型⓶]
 　　 　Ex)rails generate model User name:string mail:string password:string
 　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　　※パスを暗号化する場合は別の対応！
+　　　　※必要に応じて「db/migrate/[timestamp]_create_[モデル名].rb」を編集する　←migrateするまでは変更できる！
 　手順３．DBの作成　MySQLのコマンドでDBを作成する：create database [db名]
 　　　　config/database.ymlでDB名&ユーザー名修正　※MySQLのユーザー：wsluser,バス：null
 　手順４．マイグレーション実行
@@ -24,22 +27,6 @@
 　⓷viwsページを作成する             app/views/～/～.html.erb
 　必要に応じてmodelにバリデーション等書く！
 
-〇静的ファイルの作成　⇒コントローラのみ作成する！（モデルを作らない）
- rails generate controller [コントローラ名] [アクション名]
-　Ex)rails generate controller StaticPages home
-
-〇マイグレーションファイルの作成&マイグレーション実行
-　手順１．作成：rails g migration [マイグレーションファイル名]
-　　　　　　Ex)rails g migration add_password_digist_to_users
-　手順２．ファイル編集　db/migrate/～.rbを編集する
-　手順３．実行：rake db:migrate  　※アプリのルートディレクトリで実行する必要有り！（Rakefileのある階層）
-
-〇ログインパスワードの暗号化
-　手順１．モデル（マイグレーションファイル）に追加するカラム名はpassword_digestとする
-　　　　　　Ex）rails generate model User name:string mail:string password_digest:tring
-  手順２．has_secure_passwordをモデルファイルに記述する
-  手順３．bcryptというgemをインストールする
-  手順４．protect_from_forgeryをコントローラーに記述する
 
 〇環境変数ファイルの作成＆呼び出し
 　手順１．dotenvをインストールする
@@ -57,26 +44,41 @@
 　　　　　username: <%= ENV['DATABASE_USER'] %>
   　　　　password: <%= ENV['DATABASE_PASSWORD'] %>
   　　　　socket: /tmp/mysql.sock
+  手順４．.envを.gitignoreに設定する
+    ルートディレクトリ直下にある.envファイルの記述方法
+  　Ex）/.env
 
-〇パーシャルの作成方法
-　手順１．任意の場所にファイル作成
-　　Ex）/app/views/layouts/_header
-　　　　※ファイル名は「_」で始める
-　手順２．任意のファイルで呼び出す
-　　<%= render '{パス}' %>
-　　※パスはviewsフォルダをルートとした絶対バスで書く！
-　　※呼び出す際のファイル名の「_」は不要
-　　　Ex）<%= render '{layouts/header}' %>
 
-〇リンクの書き方
-　<%= link_to [表示する文字列], [リンク先URL], method: [get or post], class: [CSSを当てるクラス] %>
-　Ex）<%= link_to "ユーザ一覧", "/users", method: "get", class: "btn btn-outline-secondary" %>
+〇ログインパスワードの暗号化
+　手順１．モデル（マイグレーションファイル）に追加するカラム名はpassword_digestとする
+　　　　　　Ex）rails generate model User name:string mail:string password_digest:tring
+  手順２．app/models/～.rbファイルに１行追記する
+  　　　　　has_secure_password
+  手順３．bcryptというgemをインストールする　※bcrypt：ハッシュ化するための関数を提供しているライブラリ
+  手順４．protect_from_forgeryをコントローラーに記述する
 
-〇レイアウト側(/app/views/application.html.erb)に値を渡す方法
-　※次の2種類の書き方がある「provide」,「content_for」が以下は「provide」のやり方
-　手順１．受け渡し元ファイルに以下のように書く
-　　<% provide :変数名, '渡す値' %>
-　　Ex）<% provide :title, '新規登録 %>
-　手順２．受け渡し先(application.html.erb)の表示させたい位置に以下を追記
-　　<%= yield(:変数名) %>
-　　Ex）<%= yield(:title) %>
+
+〇静的ファイルの作成　⇒コントローラのみ作成する！（モデルを作らない）
+ rails generate controller [コントローラ名] [アクション名]
+　Ex)rails generate controller StaticPages home
+
+
+〇マイグレーションファイルの作成&マイグレーション実行　
+　※既存カラムの修正は⓵rollback⓶migrationファイル修正⓷migration実行でもできる！！
+　手順１．作成：rails g migration [マイグレーションファイル名]
+　　　　　　Ex)rails g migration add_password_digist_to_users
+　手順２．ファイル編集　db/migrate/[timestamp]_create_[モデル名].rbを編集する
+　手順３．実行：rake db:migrate  　※アプリのルートディレクトリで実行する必要有り！（Rakefileのある階層）
+
+〇マイグレーション関係のコマンド
+　マイグレーション実施有無の確認：rails db:migrate:status
+  マイグレーションを1つ前に戻す：rails db:rollback
+  マイグレーションを任意の場所に戻す：rails db:rollback STEP=[数字]
+  　Ex）rails db:rollback STEP=3　最新のマイグレーションファイルから数えて3つ目に戻る
+  マイグレーションファイルの削除方法
+  　⓵Downの状態にする
+  　⓶ファイルを削除する！（コマンド不要！ファイルを削除！）
+  DBをリセットし再migrate実行：rails db:migrate:reset
+　シーディング：rails db:seed
+
+

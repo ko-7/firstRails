@@ -28,23 +28,34 @@
             <div class="modal-dialog">
               <div class="modal-content">
                 <div class="modal-header">
-                  <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                  <h5 class="modal-title" id="exampleModalLabel">ログイン情報を入力してください</h5>
                   <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <div class="modal-body">
-                  
-                </div>
-                <div class="modal-footer">
-                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
-                  <button type="button" class="btn btn-primary">ログイン</button>
-                </div>
+
+                <%= form_tag("/users/login") do %>
+                  <div class="modal-body">
+                    <div class="mb-3">
+                      <label for="mail_id" class="form-label">メールアドレス</label>
+                      <input type="email" name="email" class="form-control" id="mail_id" placeholder="name@example.com">
+                    </div>
+                    <div class="mb-3">
+                      <label for="password_id" class="form-label">パスワード</label>
+                      <input type="password" name="password" class="form-control" id="password_id">
+                    </div>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">キャンセル</button>
+                    <input type="submit" value="ログイン" class="btn btn-primary">
+                  </div>
+                <% end %>
+
               </div>
             </div>
           </div>
         </li>
 
         <li class="nav-item">
-          <%= link_to "新規登録", "/users/add", method: "get", class: "btn btn-outline-secondary" %>
+          <%= link_to "新規登録", "/users/new", method: "get", class: "btn btn-outline-secondary" %>
         </li>
       </ul>
 

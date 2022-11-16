@@ -1,0 +1,42 @@
+〇パーシャルの作成方法
+　手順１．任意の場所にファイル作成
+　　Ex）/app/views/layouts/_header
+　　　　※ファイル名は「_」で始める
+　手順２．任意のファイルで呼び出す
+　　<%= render '{パス}' %>
+　　※パスはviewsフォルダをルートとした絶対バスで書く！
+　　※呼び出す際のファイル名の「_」は不要
+　　　Ex）<%= render '{layouts/header}' %>   ←　括弧{}が必要か不明
+　　　Ex）<%= render 'layouts/header' %>
+
+〇リンクの書き方
+　<%= link_to [表示する文字列], [リンク先URL], method: [get or post], class: [CSSを当てるクラス] %>
+　Ex）<%= link_to "ユーザ一覧", "/users", method: "get", class: "btn btn-outline-secondary" %>
+
+〇レイアウト側(/app/views/application.html.erb)に値を渡す方法
+　※次の2種類の書き方がある「provide」,「content_for」が以下は「provide」のやり方
+　手順１．受け渡し元ファイルに以下のように書く
+　　<% provide :変数名, '渡す値' %>
+　　Ex）<% provide :title, '新規登録 %>
+　手順２．受け渡し先(application.html.erb)の表示させたい位置に以下を追記
+　　<%= yield(:変数名) %>
+　　Ex）<%= yield(:title) %>
+
+〇本番環境でSSL(https)を設定する
+　手順１：設定ファイル中の１行コメントアウトを外す
+  　対象ファイル：config/environments/production.rb
+  　対象行　　　：config.force_ssl = true
+  手順２：SSL証明書を取得する
+
+〇Rails標準のストレージ機能Active Storage
+  rails active_storage:install
+
+〇Gitブランチ作成&変更のマージ
+　ブランチを作成して移動する：git chechout -b [ブランチ名]
+　mainに変更をマージする手順
+　　①変更したブランチでコマンド実行
+      　git add -A
+        git commit -m '一言コメント'
+        git chechout main
+    ②mainブランチにてコマンド実行
+　　　　git merge [ブランチ名]

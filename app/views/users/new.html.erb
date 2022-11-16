@@ -1,6 +1,7 @@
 <% provide :title, '新規登録' %>
 
-<%= form_tag("/users/create") do %>
+<!-- <%= form_tag("/users/create") do %> -->
+<%= form_tag @user do %>
   <div class="mb-3">
     <label for="name_id" class="form-label">名前</label>
     <input type="text" name="name" value="<%= @user.name %>" class="form-control" id="name_id" placeholder="rails太郎">
@@ -13,5 +14,18 @@
     <label for="password_id" class="form-label">パスワード</label>
     <input type="password" name="password" value="<%= @user.password_digest %>" class="form-control" id="password_id">
   </div>
-  <input type="submit" value="新規登録">
+  <input type="submit" value="新規登録" class="ms-auto btn btn-primary">
+<% end %>
+
+
+
+<!-- Formの書き方！Rails -->
+<%= form_tag(users_path, method: :post) do %>
+  <%= label_tag :名前 %>
+  <%= text_field_tag :name %>
+  <%= label_tag :メールアドレス %>
+  <%= text_field_tag :mail %>
+  <%= label_tag :パスワード %>
+  <%= text_field_tag :password_digest %>
+  <%= submit_tag "追加" %>
 <% end %>
